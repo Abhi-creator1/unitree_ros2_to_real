@@ -41,10 +41,21 @@ add_executable(ros2_position_example src/ros2_position_example.cpp)
 target_link_libraries(ros2_position_example ${EXTRA_LIBS})
 ament_target_dependencies(ros2_position_example rclcpp ros2_unitree_legged_msgs)
 
+add_executable(teleop_control src/teleop_control.cpp)
+target_link_libraries(teleop_control ${EXTRA_LIBS})
+ament_target_dependencies(teleop_control rclcpp ros2_unitree_legged_msgs)
+
+
+add_executable(imu_test src/imu_test.cpp)
+target_link_libraries(imu_test ${EXTRA_LIBS})
+ament_target_dependencies(imu_test rclcpp ros2_unitree_legged_msgs)
+
 install(TARGETS
     ros2_udp
     ros2_walk_example
     ros2_position_example
+    imu_test
+    teleop_control
     DESTINATION lib/${PROJECT_NAME}
 )
 

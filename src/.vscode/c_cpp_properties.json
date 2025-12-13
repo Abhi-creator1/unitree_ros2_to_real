@@ -1,0 +1,34 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/a/unitree_ros2_ws/install/slam_toolbox/include/**",
+        "/home/a/unitree_ros2_ws/install/ros2_unitree_legged_msgs/include/**",
+        "/home/a/ur_ws/install/ur_calibration/include/**",
+        "/home/a/ur_ws/install/ur_robot_driver/include/**",
+        "/home/a/ur_ws/install/ur_controllers/include/**",
+        "/home/a/ur_ws/install/ur_dashboard_msgs/include/**",
+        "/home/a/ur_ws/install/custom_msgs/include/**",
+        "/home/a/ur_ws/install/cartesian_compliance_controller/include/**",
+        "/home/a/ur_ws/install/cartesian_motion_controller/include/**",
+        "/home/a/ur_ws/install/cartesian_force_controller/include/**",
+        "/home/a/ur_ws/install/cartesian_controller_handles/include/**",
+        "/home/a/ur_ws/install/cartesian_controller_base/include/**",
+        "/opt/ros/humble/include/**",
+        "/home/a/unitree_ros2_ws/src/slam_toolbox/include/**",
+        "/home/a/unitree_ros2_ws/src/unitree_ros2_to_real/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}
