@@ -8,6 +8,13 @@ find_package(rclcpp REQUIRED)
 
 find_package(ros2_unitree_legged_msgs REQUIRED)
 
+find_package(nav_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(tf2_ros REQUIRED)
+
+
 
 message("-- CMAKE_SYSTEM_PROCESSOR: ${CMAKE_SYSTEM_PROCESSOR}")
 if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
@@ -48,7 +55,27 @@ ament_target_dependencies(teleop_control rclcpp ros2_unitree_legged_msgs)
 
 add_executable(imu_test src/imu_test.cpp)
 target_link_libraries(imu_test ${EXTRA_LIBS})
-ament_target_dependencies(imu_test rclcpp ros2_unitree_legged_msgs)
+ament_target_dependencies(imu_test
+  rclcpp
+  ros2_unitree_legged_msgs
+  sensor_msgs
+  tf2
+  tf2_ros
+)
+
+
+add_executable(unitree_odom_node src/unitree_odom_node.cpp)
+target_link_libraries(unitree_odom_node ${EXTRA_LIBS})
+ament_target_dependencies(unitree_odom_node
+  rclcpp
+  nav_msgs
+  sensor_msgs
+  geometry_msgs
+  tf2
+  tf2_ros
+  ros2_unitree_legged_msgs
+)
+
 
 install(TARGETS
     ros2_udp
@@ -56,6 +83,7 @@ install(TARGETS
     ros2_position_example
     imu_test
     teleop_control
+    unitree_odom_node
     DESTINATION lib/${PROJECT_NAME}
 )
 

@@ -1,0 +1,12 @@
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: false
+    slam_mode: online      # online mapping mode
+    map_file_name: ""      # leave empty for live mapping
+    odom_frame: "odom"
+    base_frame: "base_link"
+    map_frame: "map"
+    scan_topic: "/scan"
+    max_laser_range: 8.0
+    minimum_time_interval: 0.05
+    use_scan_matching: true

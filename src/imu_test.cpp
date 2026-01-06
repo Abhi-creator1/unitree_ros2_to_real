@@ -1,34 +1,64 @@
-#include "rclcpp/rclcpp.hpp"
-#include "ros2_unitree_legged_msgs/msg/high_state.hpp"
-#include "ros2_unitree_legged_msgs/msg/imu.hpp"
+#include <rclcpp/rclcpp.hpp>
+#include <sensor_msgs/msg/imu.hpp>
+#include <tf2/LinearMath/Quaternion.h>
 
-class ImuPublisherNode : public rclcpp::Node {
+#include "ros2_unitree_legged_msgs/msg/high_state.hpp"
+
+class ImuPublisherNode : public rclcpp::Node
+{
 public:
-    ImuPublisherNode() : Node("imu_publisher_node") {
-        imu_pub_ = this->create_publisher<ros2_unitree_legged_msgs::msg::IMU>("imu/data_raw", 10);
-        high_state_sub_ = this->create_subscription<ros2_unitree_legged_msgs::msg::HighState>(
-            "high_state",
-            10,
-            std::bind(&ImuPublisherNode::highStateCallback, this, std::placeholders::_1));
-    }
+  ImuPublisherNode() : Node("unitree_imu_publisher")
+  {
+    imu_pub_ = create_publisher<sensor_msgs::msg::Imu>("imu/data_raw", 10);
+
+    high_state_sub_ = create_subscription<ros2_unitree_legged_msgs::msg::HighState>(
+      "high_state", 10,
+      std::bind(&ImuPublisherNode::callback, this, std::placeholders::_1));
+  }
 
 private:
-    void highStateCallback(const ros2_unitree_legged_msgs::msg::HighState::SharedPtr msg) {
-        // Debug print for IMU quaternion z component
-        RCLCPP_INFO(this->get_logger(), "Received IMU quaternion z: %f", msg->imu.quaternion[2]);
+  void callback(const ros2_unitree_legged_msgs::msg::HighState::SharedPtr msg)
+  {
+    sensor_msgs::msg::Imu imu;
 
-        // Publish IMU data extracted from HighState
-        imu_pub_->publish(msg->imu);
+    imu.header.stamp = now();
+    imu.header.frame_id = "base_link";
+
+    // Quaternion (FULL, not just z)
+    imu.orientation.x = msg->imu.quaternion[0];
+    imu.orientation.y = msg->imu.quaternion[1];
+    imu.orientation.z = msg->imu.quaternion[2];
+    imu.orientation.w = msg->imu.quaternion[3];
+
+    // Angular velocity
+    imu.angular_velocity.x = msg->imu.gyroscope[0];
+    imu.angular_velocity.y = msg->imu.gyroscope[1];
+    imu.angular_velocity.z = msg->imu.gyroscope[2];
+
+    // Linear acceleration
+    imu.linear_acceleration.x = msg->imu.accelerometer[0];
+    imu.linear_acceleration.y = msg->imu.accelerometer[1];
+    imu.linear_acceleration.z = msg->imu.accelerometer[2];
+
+    // Covariances (IMPORTANT)
+    for(int i=0;i<9;i++) {
+      imu.orientation_covariance[i] = 0.01;
+      imu.angular_velocity_covariance[i] = 0.01;
+      imu.linear_acceleration_covariance[i] = 0.01;
     }
 
-    rclcpp::Publisher<ros2_unitree_legged_msgs::msg::IMU>::SharedPtr imu_pub_;
-    rclcpp::Subscription<ros2_unitree_legged_msgs::msg::HighState>::SharedPtr high_state_sub_;
+    imu_pub_->publish(imu);
+  }
+
+  rclcpp::Publisher<sensor_msgs::msg::Imu>::SharedPtr imu_pub_;
+  rclcpp::Subscription<ros2_unitree_legged_msgs::msg::HighState>::SharedPtr high_state_sub_;
 };
 
-int main(int argc, char *argv[]) {
-    rclcpp::init(argc, argv);
-    auto imu_node = std::make_shared<ImuPublisherNode>();
-    rclcpp::spin(imu_node);
-    rclcpp::shutdown();
-    return 0;
+int main(int argc, char **argv)
+{
+  rclcpp::init(argc, argv);
+  rclcpp::spin(std::make_shared<ImuPublisherNode>());
+  rclcpp::shutdown();
+  return 0;
 }
+
