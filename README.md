@@ -1,3 +1,4 @@
+
 # Introduction
 This package can send control command to real robot from ROS2. You can do low-level control(namely control all joints on robot) and high-level control(namely control the walking direction and speed of robot).
 
@@ -28,6 +29,9 @@ After you download this package into this folder, your folder should be like thi
 ```
 
 And now download unitree_legged_sdk v3.5.1 into the path `~/ros_ws/src_unitree_ros2_to_real`
+
+#Additional note before building
+1. move ros2_unitree_legged_msgs to src folder
 
 
 # Build
@@ -83,4 +87,7 @@ ros2 run unitree_legged_real ros2_position_example
 
 And before you do the low-level control, please press L2+A to sit the robot down and then press L1+L2+start to make the robot into
 mode in which you can do joint-level control, finally make sure you hang the robot up before you run low-level control.
+
+
+#for any additional issue refer to this: https://github.com/MAVProxyUser/YushuTechUnitreeGo1?tab=readme-ov-file#sdk-usage-on-non-edu-models
 
